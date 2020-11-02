@@ -1,0 +1,58 @@
+name: "godot-ci export"
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  GODOT_VERSION: 3.2.3
+  EXPORT_NAME: moonshot
+  SOURCE_DIRECTORY: src
+
+jobs:
+  export-windows:
+    name: Windows Export
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:3.2.3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/templates
+          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
+      - name: Windows Build
+        run: |
+          mkdir -v -p build/windows
+          cd $SOURCE_DIRECTORY
+          godot -v --export "Windows Desktop" ../build/windows/$EXPORT_NAME.exe
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: windows
+          path: build/windows
+
+  export-linux:
+    name: Linux Export
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:3.2.3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/templates
+          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
+      - name: Linux Build
+        run: |
+          mkdir -v -p build/linux
+          cd $SOURCE_DIRECTORY
+          godot -v --export "Linux/X11" ../build/linux/$EXPORT_NAME.x86_64
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: linux
+          path: build/linux
