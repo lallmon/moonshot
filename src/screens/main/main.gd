@@ -14,11 +14,14 @@ func subscribe_to_player():
 	game.player.connect("depth_status", game.gui, "_on_Sub_depth_status")
 	game.player.connect("hull_status", game.gui, "_on_Sub_hull_status")
 	game.player.connect("oxygen_status", game.gui, "_on_Sub_oxygen_status")
+	game.player.connect("heavy_damage", game.gui, "_on_heavy_damage")
 	game.player.connect("sub_destroyed", self, "_on_Game_over")
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause_btn"):
 		toggle_pause()
+	if event.is_action_pressed("reset_btn"):
+		load_screen(FIRST_SCN)
 
 
 
