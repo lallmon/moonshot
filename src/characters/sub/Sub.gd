@@ -1,37 +1,54 @@
 extends RigidBody2D
 
+#consts
+const MAX_TORQUE:float = 6000.0
+const MAX_HULL_INTEGRITY:float = 100.0
+const MAX_POWER:float = 100.0
+const MAX_OXYGEN:float = 100.0
+
+#power costs values
+#TODO: division by fps(60), replace with delta value
+const LIGHTS_COST:float =  5.0/60.0
+const HULL_REGEN_COST:float = 10.0/60.0
+const HULL_REGEN_RATE:float = 5.0/60.0
+const BOOST_COST:float = 15.0/60.0
+
+#setgets
+var hull_integrity: float = 100.0 setget set_hull_integrity, get_hull_integrity
+var oxygen: float = 100.0 setget set_oxygen, get_oxygen
+var power: float = 100.0 setget set_power, get_power
+
+#movement
 var thrust : Vector2 = Vector2(0, 350)
-var idle_thrust : Vector2 = Vector2(0, 35)
-var max_torque : int = 6000
-var torque : int = 0
-var gravity : int = 10
-var hull_integrity: int = 100
-var oxygen: float = 100
-var oxygen_decay = 1.0
-var vel_modifier = Vector2(0,0)
-var input_disabled = false
+var idle_thrust : Vector2 = Vector2(0, 70)
+var torque : float = 0.0
+var torque_acceleration: float = 100.0
+var torque_decelleration: float = 50.0
+var vel_modifier:Vector2 = Vector2(0,0)
+
+#regen/decay rates
+var oxygen_decay:float = 1.0
+var power_regen: float = 20.0 / 60.0
+
+var oxygen_decay_disabled: bool = false
+var power_regen_disabled: bool = false
+var lights_on: bool = false
+var input_disabled:bool = false
+var sub_dead:bool = false
 
 signal depth_status(depth)
 signal hull_status(hull_integrity)
 signal oxygen_status(oxygen)
+signal power_status(power)
 signal heavy_damage(damage)
 signal sub_destroyed
 
 func _ready():
 	add_to_group("player")
-	input_disabled = true
-	$BoostBubbles.emitting = false
 	$OxygenTimer.connect("timeout", self, "_on_Oxygen_timeout")
-	$OxygenTimer.start()
 	spawn_state()
 
-func spawn_state():
-	set_axis_velocity(Vector2(0,700))
-	$InputActivation.start()
-
 func _integrate_forces(_state):
-	emit_signal("depth_status", global_position.y)
-	emit_signal("hull_status", hull_integrity)
 	var mouse_position = get_global_mouse_position()
 	var mouse_vector = mouse_position - position
 	var rotation_dir = 0
@@ -46,33 +63,23 @@ func _integrate_forces(_state):
 			
 			applied_force = -idle_thrust.rotated(rotation)
 			
-			
-			#NOT SURE IF NEEEDED!!
 			#detect colliding bodies
 			var collision = get_colliding_bodies()
 
 			#if a collision is detected, bounce the player back
 			if collision:
 				for a in collision:
-					#I can't even remember what this resolves to lol
 					applied_force += ((a.position - position).normalized().rotated(rotation)*10)
-					#applied_force += (-(mouse_vector.normalized()))
-					#set_axis_velocity(-((mouse_position - position).normalized()))
-			
-			#UNUSED, could be useful?
-#			var target_rotation = rad2deg(position.angle_to_point(mouse_position))
-#			var angle_diff = rotation  - target_rotation
 			
 			if l_dist<r_dist:
 				rotation_dir = 1
 			else:
 				rotation_dir = -1
 			
-			
-			if torque <= max_torque and torque >= 0:
-				torque += 100
+			if torque <= MAX_TORQUE and torque >= 0:
+				torque += torque_acceleration
 #
-			torque -=50
+			torque -= torque_decelleration
 			applied_torque = rotation_dir * torque
 			
 		if Input.is_mouse_button_pressed(2) and not input_disabled:
@@ -92,8 +99,14 @@ func _integrate_forces(_state):
 	if Input.is_mouse_button_pressed(3) and not input_disabled:
 		TurnOnLights()
 			
-	#set_axis_velocity(linear_velocity + vel_modifier)
 	applied_force += vel_modifier
+	
+func spawn_state():
+	set_axis_velocity(Vector2(0,700))
+	input_disabled = true
+	$BoostBubbles.emitting = false
+	$InputActivation.start()
+	$OxygenTimer.start()
 
 func TurnOnLights():
 	if $AnimationPlayer.is_playing():
@@ -108,22 +121,20 @@ func TriggerLights():
 	$RightBeamGlow.enabled = !$RightBeamGlow.enabled
 	$RightBeamGlow2.enabled = !$RightBeamGlow2.enabled
 	$BackLight.enabled = !$BackLight.enabled
-	yield(get_tree().create_timer(1.0), "timeout")
 
 func DestroySub():
 	emit_signal("sub_destroyed")
 	input_disabled=true
 
 func TakeHullDamage(damage_amount):
-	var new_integrity = hull_integrity - damage_amount
-	var difference = hull_integrity - new_integrity
-	hull_integrity = new_integrity
+	var new_integrity = self.hull_integrity - damage_amount
+	var difference = self.hull_integrity - new_integrity
+	self.hull_integrity = new_integrity
 	if difference >= 5:
 		emit_signal("heavy_damage", difference)
-	if hull_integrity <= 0:
-		hull_integrity = 0
+	if self.hull_integrity <= 0:
+		self.hull_integrity = 0
 		DestroySub()
-	emit_signal("hull_status", hull_integrity)
 
 func _on_Sub_body_entered(body):
 	var velocity_force = linear_velocity.length()
@@ -135,13 +146,48 @@ func _on_Sub_body_entered(body):
 		TakeHullDamage(body.damage * abs(torque_force))
 		
 func _on_Oxygen_timeout():
-	oxygen -= oxygen_decay
-	if oxygen<=0:
-		oxygen = 0
+	self.oxygen -= oxygen_decay
+	if self.oxygen<=0:
+		self.oxygen = 0
 		DestroySub()
-	emit_signal("oxygen_status", oxygen)
 
 func _on_InputActivation_timeout() -> void:
 	$EngineNoise.play()
 	$AnimatedSprite.playing=true
 	input_disabled = false
+
+###########################
+#SETTERS AND GETTERS
+###########################
+func set_hull_integrity(new_value):
+	if new_value >= MAX_HULL_INTEGRITY:
+		new_value = MAX_HULL_INTEGRITY
+	elif new_value <=0:
+		new_value = 0
+	hull_integrity = new_value
+	emit_signal("hull_status", hull_integrity)
+		
+func get_hull_integrity():
+	return hull_integrity
+	
+func set_oxygen(new_value):
+	if new_value>MAX_OXYGEN:
+		new_value=MAX_OXYGEN
+	elif new_value <=0:
+		new_value = 0
+	oxygen = new_value
+	emit_signal("oxygen_status", oxygen)
+	
+func get_oxygen():
+	return oxygen
+	
+func set_power(new_value):
+	if new_value>MAX_POWER:
+		new_value = MAX_POWER
+	elif new_value <=0:
+		new_value = 0
+	power = new_value
+	emit_signal("power_status", power)
+	
+func get_power():
+	return power
