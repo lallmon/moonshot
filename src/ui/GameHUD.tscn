@@ -74,11 +74,13 @@ __meta__ = {
 
 [node name="DepthGuage" type="HBoxContainer" parent="."]
 anchor_left = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
+anchor_bottom = 1.0
 margin_left = -184.0
-margin_top = 64.0
+margin_top = -111.758
 margin_right = 184.0
-margin_bottom = 79.0
+margin_bottom = -32.7579
 size_flags_vertical = 0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -94,7 +96,6 @@ custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Depth: "
 valign = 1
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -110,7 +111,6 @@ custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "0"
 valign = 1
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -126,7 +126,6 @@ text = "m"
 align = 2
 valign = 1
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -185,6 +184,36 @@ size_flags_vertical = 2
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Oxygen"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Power" type="VBoxContainer" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -160.0
+margin_top = 32.0
+margin_right = 160.0
+margin_bottom = 147.0
+size_flags_vertical = 0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Meter" parent="Power" instance=ExtResource( 4 )]
+margin_right = 320.0
+
+[node name="Title" type="Label" parent="Power"]
+margin_top = 68.0
+margin_right = 320.0
+margin_bottom = 147.0
+size_flags_vertical = 2
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "Power"
 align = 1
 valign = 1
 __meta__ = {

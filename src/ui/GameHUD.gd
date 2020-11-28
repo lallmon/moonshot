@@ -31,3 +31,5 @@ func _on_heavy_damage(damage: int):
 func _on_Sub_oxygen_status(oxygen:float):
 	$Oxygen/Meter/Progress.value = oxygen
 
+func _on_Sub_power_status(power: float):
+	$Power/Meter/Progress.value = power
