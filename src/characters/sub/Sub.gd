@@ -28,11 +28,12 @@ var vel_modifier:Vector2 = Vector2(0,0)
 
 #regen/decay rates
 var oxygen_decay:float = 1.0
-var power_regen: float = 20.0 / 60.0
+var power_regen: float = 30.0 / 60.0
 
 var oxygen_decay_disabled: bool = false
 var power_regen_disabled: bool = false
 var lights_on: bool = false
+var is_boosting: bool = false
 var input_disabled:bool = false
 var sub_dead:bool = false
 
@@ -49,6 +50,7 @@ func _ready():
 	spawn_state()
 
 func _integrate_forces(_state):
+	emit_signal("depth_status", global_position.y)
 	var mouse_position = get_global_mouse_position()
 	var mouse_vector = mouse_position - position
 	var rotation_dir = 0
@@ -83,13 +85,23 @@ func _integrate_forces(_state):
 			applied_torque = rotation_dir * torque
 			
 		if Input.is_mouse_button_pressed(2) and not input_disabled:
-			applied_force = thrust.rotated(rotation)
-			$AnimatedSprite.speed_scale = 2
-			$BoostBubbles.emitting = true
-			$EngineNoise.pitch_scale = 1.2
-			applied_torque = lerp(applied_torque, 0, 0.5)
+			if power >= BOOST_COST:
+				applied_force = thrust.rotated(rotation)
+				is_boosting = true
+				$AnimatedSprite.speed_scale = 2
+				$BoostBubbles.emitting = true
+				$EngineNoise.pitch_scale = 1.2
+				applied_torque = lerp(applied_torque, 0, 0.5)
+			else:
+				is_boosting = false
+				applied_force = idle_thrust.rotated(rotation)
+				applied_torque = lerp(applied_torque, 0, 0.5)
+				$AnimatedSprite.speed_scale = 1
+				$BoostBubbles.emitting = false
+				$EngineNoise.pitch_scale = 1.0
 
 	else:
+		is_boosting = false
 		applied_force = idle_thrust.rotated(rotation)
 		applied_torque = lerp(applied_torque, 0, 0.5)
 		$AnimatedSprite.speed_scale = 1
@@ -101,8 +113,14 @@ func _integrate_forces(_state):
 			
 	applied_force += vel_modifier
 	
+	ProcessPower()
+	
 func spawn_state():
+	self.hull_integrity = 100.0
+	self.oxygen = 100.0
+	self.power = 100.0
 	set_axis_velocity(Vector2(0,700))
+	power_regen_disabled=false
 	input_disabled = true
 	$BoostBubbles.emitting = false
 	$InputActivation.start()
@@ -111,6 +129,10 @@ func spawn_state():
 func TurnOnLights():
 	if $AnimationPlayer.is_playing():
 		return
+	if lights_on==false:
+		power_regen_disabled = true
+		$PowerTimer.start()
+	lights_on = !lights_on
 	$AnimationPlayer.play("flicker")
 
 func TriggerLights():
@@ -136,6 +158,27 @@ func TakeHullDamage(damage_amount):
 		self.hull_integrity = 0
 		DestroySub()
 
+func RegenPower():
+	if self.power<MAX_POWER and not power_regen_disabled:
+		self.power+=power_regen
+
+func ProcessPower():
+	if is_boosting:
+		self.power -= BOOST_COST
+		power_regen_disabled = true
+		$PowerTimer.start()
+	
+	if lights_on:
+		if power>LIGHTS_COST:
+			self.power -= LIGHTS_COST
+		else:
+			TurnOnLights()
+	RegenPower()
+	
+	if hull_integrity<MAX_HULL_INTEGRITY and power >= 10.0:
+		self.power -= HULL_REGEN_COST
+		self.hull_integrity += HULL_REGEN_RATE
+
 func _on_Sub_body_entered(body):
 	var velocity_force = linear_velocity.length()
 	var torque_force = angular_velocity
@@ -155,6 +198,9 @@ func _on_InputActivation_timeout() -> void:
 	$EngineNoise.play()
 	$AnimatedSprite.playing=true
 	input_disabled = false
+	
+func _on_PowerTimer_timeout() -> void:
+	power_regen_disabled = false
 
 ###########################
 #SETTERS AND GETTERS

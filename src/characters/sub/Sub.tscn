@@ -295,6 +295,9 @@ position = Vector2( 32, 120 )
 [node name="OxygenTimer" type="Timer" parent="."]
 autostart = true
 
+[node name="PowerTimer" type="Timer" parent="."]
+one_shot = true
+
 [node name="InputActivation" type="Timer" parent="."]
 wait_time = 2.0
 one_shot = true
@@ -310,4 +313,5 @@ scale = Vector2( 0.3, 0.1 )
 z_index = 3
 texture = ExtResource( 5 )
 [connection signal="body_entered" from="." to="." method="_on_Sub_body_entered"]
+[connection signal="timeout" from="PowerTimer" to="." method="_on_PowerTimer_timeout"]
 [connection signal="timeout" from="InputActivation" to="." method="_on_InputActivation_timeout"]
