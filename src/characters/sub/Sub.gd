@@ -164,7 +164,7 @@ func TakeHullDamage(damage_amount):
 
 func RegenPower():
 	if self.power<MAX_POWER and not power_regen_disabled:
-		self.power+=power_regen
+		self.power+=POWER_REGEN
 
 func ProcessPower():
 	if is_boosting:
@@ -193,7 +193,7 @@ func _on_Sub_body_entered(body):
 		TakeHullDamage(body.damage * abs(torque_force))
 		
 func _on_Oxygen_timeout():
-	self.oxygen -= oxygen_decay
+	self.oxygen -= OXYGEN_DECAY
 	if self.oxygen<=0:
 		self.oxygen = 0
 		DestroySub()
