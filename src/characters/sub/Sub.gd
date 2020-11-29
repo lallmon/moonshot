@@ -23,11 +23,11 @@ var oxygen: float = 100.0 setget set_oxygen, get_oxygen
 var power: float = 100.0 setget set_power, get_power
 
 #movement
-var thrust : Vector2 = Vector2(0, 350)
+var thrust : Vector2 = Vector2(0, 450)
 var idle_thrust : Vector2 = Vector2(0, 70)
 var torque : float = 0.0
-var torque_acceleration: float = 100.0
-var torque_decelleration: float = 50.0
+var torque_acceleration: float = 300.0
+var torque_decelleration: float = 100.0
 var vel_modifier:Vector2 = Vector2(0,0)
 
 #regen/decay rates
