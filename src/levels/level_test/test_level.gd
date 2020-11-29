@@ -7,8 +7,6 @@ func _enter_tree() -> void:
 	game.camera = $Camera2D
 
 func _ready():
-
-	
 	generate_level(100)
 	$CanvasModulate.visible = true
 

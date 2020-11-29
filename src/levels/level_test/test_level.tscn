@@ -10,11 +10,11 @@
 [ext_resource path="res://FX/Shaders/gradient.shader" type="Shader" id=8]
 [ext_resource path="res://FX/Lights/128x128.png" type="Texture" id=9]
 [ext_resource path="res://FX/Lights/caustic_ray.png" type="Texture" id=10]
+[ext_resource path="res://levels/level_test/background_drone.ogg" type="AudioStream" id=11]
 [ext_resource path="res://levels/level_test/test_level.gd" type="Script" id=12]
 [ext_resource path="res://characters/sub/Sub.tscn" type="PackedScene" id=13]
-[ext_resource path="res://levels/level_test/background_drone.wav" type="AudioStream" id=14]
+[ext_resource path="res://levels/level_test/depth_loop.ogg" type="AudioStream" id=14]
 [ext_resource path="res://Objects/Exit/Exit.tscn" type="PackedScene" id=15]
-[ext_resource path="res://levels/level_test/depth_loop.wav" type="AudioStream" id=16]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 8 )
@@ -22,7 +22,6 @@ shader_param/color = Color( 0.439216, 0.439216, 0.439216, 1 )
 shader_param/screen_height = null
 shader_param/height = 922.197
 shader_param/position = 301.506
-shader_param/noise_amount = 0.05
 
 [sub_resource type="CanvasItemMaterial" id=2]
 blend_mode = 1
@@ -122,8 +121,6 @@ texture = ExtResource( 7 )
 [node name="Sub" parent="." instance=ExtResource( 13 )]
 position = Vector2( 958.501, -128.434 )
 contacts_reported = 1
-contact_monitor = true
-can_sleep = false
 linear_damp = 1.0
 angular_damp = 1.0
 
@@ -217,11 +214,11 @@ color = Color( 0, 0, 0, 1 )
 position = Vector2( 963.352, 19225.4 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 14 )
+stream = ExtResource( 11 )
 autoplay = true
 bus = "Ambient"
 
 [node name="BGMStream" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 16 )
+stream = ExtResource( 14 )
 bus = "BGM"
 script = ExtResource( 6 )

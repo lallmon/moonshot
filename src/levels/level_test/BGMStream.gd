@@ -6,5 +6,5 @@ func _ready():
 	
 func _on_Sub_depth_status(depth):
 	var meters = Utilities.pixels_to_meters(depth)
-	if (meters >= 10 && meters < 12) && playing == false:
+	if (meters >= 10 and meters < 12) && playing == false:
 		play()
