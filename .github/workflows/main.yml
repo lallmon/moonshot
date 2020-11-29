@@ -42,7 +42,7 @@ jobs:
           CHANNEL: windows
           ITCH_GAME: ${{ secrets.ITCHIO_GAME }}
           ITCH_USER: ${{ secrets.ITCHIO_USERNAME }}
-          PACKAGE: ../build/windows/$EXECUTABLE_TITLE-$(echo ${GITHUB_SHA} | cut -c1-6).exe
+          PACKAGE: ../build/windows/$EXECUTABLE_TITLE.exe
 
   export-mac:
     name: MacOS Export
@@ -75,7 +75,7 @@ jobs:
           CHANNEL: macintosh
           ITCH_GAME: ${{ secrets.ITCHIO_GAME }}
           ITCH_USER: ${{ secrets.ITCHIO_USERNAME }}
-          PACKAGE: ../build/mac/$EXECUTABLE_TITLE-$(echo ${GITHUB_SHA} | cut -c1-6).zip
+          PACKAGE: ../build/mac/$EXECUTABLE_TITLE.zip
 
   export-linux:
     name: Linux Export
@@ -108,4 +108,4 @@ jobs:
           CHANNEL: linux
           ITCH_GAME: ${{ secrets.ITCHIO_GAME }}
           ITCH_USER: ${{ secrets.ITCHIO_USERNAME }}
-          PACKAGE: ../build/linux/$EXECUTABLE_TITLE-$(echo ${GITHUB_SHA} | cut -c1-6).x86_64
+          PACKAGE: ../build/linux/$EXECUTABLE_TITLE.x86_64
