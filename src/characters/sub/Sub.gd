@@ -11,7 +11,11 @@ const MAX_OXYGEN:float = 100.0
 const LIGHTS_COST:float =  5.0/60.0
 const HULL_REGEN_COST:float = 10.0/60.0
 const HULL_REGEN_RATE:float = 5.0/60.0
-const BOOST_COST:float = 15.0/60.0
+const BOOST_COST:float = 10.0/60.0
+
+#regen/decay rates
+const OXYGEN_DECAY:float = 1.0
+const POWER_REGEN: float = 50.0 / 60.0
 
 #setgets
 var hull_integrity: float = 100.0 setget set_hull_integrity, get_hull_integrity
