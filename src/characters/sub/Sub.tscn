@@ -292,6 +292,9 @@ position = Vector2( -32, 120 )
 [node name="Right" type="Position2D" parent="."]
 position = Vector2( 32, 120 )
 
+[node name="Nose" type="Position2D" parent="."]
+position = Vector2( 0, 170 )
+
 [node name="OxygenTimer" type="Timer" parent="."]
 autostart = true
 

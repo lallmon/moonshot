@@ -30,10 +30,6 @@ var torque_acceleration: float = 300.0
 var torque_decelleration: float = 100.0
 var vel_modifier:Vector2 = Vector2(0,0)
 
-#regen/decay rates
-var oxygen_decay:float = 1.0
-var power_regen: float = 30.0 / 60.0
-
 var oxygen_decay_disabled: bool = false
 var power_regen_disabled: bool = false
 var lights_on: bool = false
@@ -64,57 +60,57 @@ func _integrate_forces(_state):
 	var l_dist = $Left.global_position.distance_to(mouse_position)
 	var r_dist = $Right.global_position.distance_to(mouse_position)
 	
-	if Input.is_mouse_button_pressed(1) or Input.is_mouse_button_pressed(2):
-		if Input.is_mouse_button_pressed(1) and not input_disabled:
-			
-			applied_force = -idle_thrust.rotated(rotation)
-			
-			#detect colliding bodies
-			var collision = get_colliding_bodies()
-
-			#if a collision is detected, bounce the player back
-			if collision:
-				for a in collision:
-					applied_force += ((a.position - position).normalized().rotated(rotation)*10)
-			
-			if l_dist<r_dist:
-				rotation_dir = 1
-			else:
-				rotation_dir = -1
-			
-			if torque <= MAX_TORQUE and torque >= 0:
-				torque += torque_acceleration
-#
-			torque -= torque_decelleration
-			applied_torque = rotation_dir * torque
-			
-		if Input.is_mouse_button_pressed(2) and not input_disabled:
-			if power >= BOOST_COST:
-				applied_force = thrust.rotated(rotation)
-				is_boosting = true
-				$AnimatedSprite.speed_scale = 2
-				$BoostBubbles.emitting = true
-				$EngineNoise.pitch_scale = 1.2
-				applied_torque = lerp(applied_torque, 0, 0.5)
-			else:
-				is_boosting = false
-				applied_force = idle_thrust.rotated(rotation)
-				applied_torque = lerp(applied_torque, 0, 0.5)
-				$AnimatedSprite.speed_scale = 1
-				$BoostBubbles.emitting = false
-				$EngineNoise.pitch_scale = 1.0
-
+	if l_dist<r_dist:
+		rotation_dir = 1
 	else:
-		is_boosting = false
-		applied_force = idle_thrust.rotated(rotation)
-		applied_torque = lerp(applied_torque, 0, 0.5)
-		$AnimatedSprite.speed_scale = 1
-		$BoostBubbles.emitting = false
-		$EngineNoise.pitch_scale = 1.0
+		rotation_dir = -1
+		
+	if torque <= MAX_TORQUE and torque >= 0:
+		torque += torque_acceleration
+	
+	#slowdown value, has arbitrary division number, consider offloading to variable
+	var distance = $Nose.global_position.distance_to($Target/sprite.global_position)/200.0
+
+	applied_torque = rotation_dir * torque * distance
+	
+	
+	is_boosting = false
+	applied_force = idle_thrust.rotated(rotation)
+	$AnimatedSprite.speed_scale = 1
+	$BoostBubbles.emitting = false
+	$EngineNoise.pitch_scale = 1.0
+	
+	if Input.is_mouse_button_pressed(2) and not input_disabled:
+			
+		applied_force = -thrust.rotated(rotation)/2
+		
+		#detect colliding bodies
+		var collision = get_colliding_bodies()
+
+		#if a collision is detected, bounce the player back
+		if collision:
+			for a in collision:
+				applied_force += ((a.position - position).normalized().rotated(rotation)*10)
+		
+			
+	if Input.is_mouse_button_pressed(1) and not input_disabled:
+		if power >= BOOST_COST:
+			applied_force = thrust.rotated(rotation)
+			is_boosting = true
+			$AnimatedSprite.speed_scale = 2
+			$BoostBubbles.emitting = true
+			$EngineNoise.pitch_scale = 1.2
+
+
 
 	if Input.is_mouse_button_pressed(3) and not input_disabled:
 		TurnOnLights()
-			
+	
+	if torque >=0:
+		torque -= torque_decelleration
+	elif torque<0:
+		torque = 0
+	
 	applied_force += vel_modifier
 	
 	ProcessPower()
