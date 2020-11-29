@@ -296,6 +296,7 @@ position = Vector2( 32, 120 )
 autostart = true
 
 [node name="PowerTimer" type="Timer" parent="."]
+wait_time = 0.5
 one_shot = true
 
 [node name="InputActivation" type="Timer" parent="."]
