@@ -35,7 +35,8 @@
 [ext_resource path="res://characters/sub/sprite/0025.png" type="Texture" id=33]
 [ext_resource path="res://characters/sub/sprite/0005.png" type="Texture" id=34]
 [ext_resource path="res://characters/sub/sprite/0010.png" type="Texture" id=35]
-[ext_resource path="res://characters/sub/dropship_engine.wav" type="AudioStream" id=36]
+[ext_resource path="res://characters/sub/Sounds/dropship_engine.wav" type="AudioStream" id=36]
+
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.8
