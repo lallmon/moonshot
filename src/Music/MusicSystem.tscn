@@ -1,12 +1,13 @@
 [gd_scene load_steps=15 format=2]
 
-[ext_resource path="res://scripts/MusicSystem.gd" type="Script" id=1]
+[ext_resource path="res://Music/MusicSystem.gd" type="Script" id=1]
 [ext_resource path="res://Music/BGM/deep_dark_bass_loop_keys.ogg" type="AudioStream" id=2]
 [ext_resource path="res://Music/BGM/deep_mid_pad_loop.ogg" type="AudioStream" id=3]
 [ext_resource path="res://Music/BGM/deep_mid_pad_loop_keys.ogg" type="AudioStream" id=4]
 [ext_resource path="res://Music/BGM/deep_dark_bass_loop.ogg" type="AudioStream" id=5]
 [ext_resource path="res://Music/BGM/deep_space_pad_loop_keys.ogg" type="AudioStream" id=6]
 [ext_resource path="res://Music/BGM/deep_space_pad_loop.ogg" type="AudioStream" id=7]
+
 
 [sub_resource type="Animation" id=1]
 resource_name = "_SETUP"
