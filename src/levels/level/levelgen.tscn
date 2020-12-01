@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=2]
+[gd_scene load_steps=45 format=2]
 
 [ext_resource path="res://cameras/Camera2D.gd" type="Script" id=1]
 [ext_resource path="res://Objects/SpawnSplash/SpawnSplash.tscn" type="PackedScene" id=2]
@@ -16,7 +16,6 @@
 [ext_resource path="res://levels/level/underwater_drone.wav" type="AudioStream" id=14]
 [ext_resource path="res://ui/fonts/DepthGuage.tres" type="DynamicFont" id=15]
 [ext_resource path="res://scripts/SplashBoard.gd" type="Script" id=16]
-[ext_resource path="res://ui/MoondropTitle.gd" type="Script" id=17]
 [ext_resource path="res://FX/Shaders/water.tres" type="Shader" id=18]
 [ext_resource path="res://FX/Particles/fish_02.png" type="Texture" id=19]
 [ext_resource path="res://ui/fonts/instructions.tres" type="DynamicFont" id=20]
@@ -416,7 +415,6 @@ __meta__ = {
 [node name="Logo" type="Sprite" parent="SplashBoard"]
 position = Vector2( 930.135, 104.962 )
 texture = ExtResource( 12 )
-script = ExtResource( 17 )
 
 [node name="Longest" type="VBoxContainer" parent="SplashBoard"]
 modulate = Color( 1, 1, 1, 0.784314 )
