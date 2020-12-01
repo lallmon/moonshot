@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/deep_mid_pad_loop_keys.ogg-bc8c677b843d13f38bdefe8eecbc2b27.oggstr"
+
+[deps]
+
+source_file="res://Music/BGM/deep_mid_pad_loop_keys.ogg"
+dest_files=[ "res://.import/deep_mid_pad_loop_keys.ogg-bc8c677b843d13f38bdefe8eecbc2b27.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0
