@@ -34,9 +34,9 @@ func pick_decoration(index = -1):
 
 func set_texture(depth):
 	var tex = textures[0]
-	if depth>=200:
+	if depth>=800:
 		tex = textures[1]
-	if depth>=500:
+	if depth>=2000:
 		tex = textures[2]
 	$Polygon2D.texture = tex
 	
