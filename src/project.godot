@@ -17,9 +17,8 @@ _global_script_class_icons={
 
 config/name="Moondrop"
 run/main_scene="res://screens/main/main.tscn"
-boot_splash/image="res://ui/splash.png"
+boot_splash/image="res://ui/Splash_text.jpg"
 boot_splash/fullsize=false
-boot_splash/use_filter=false
 config/icon="res://ui/water-bolt.png"
 config/macos_native_icon="res://ui/water-bolt.icns"
 config/windows_native_icon="res://ui/water_bolt_BLL_icon.ico"
