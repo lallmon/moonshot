@@ -203,7 +203,10 @@ func TakeHullDamage(damage_amount):
 	var new_integrity = self.hull_integrity - damage_amount
 	var difference = self.hull_integrity - new_integrity
 	self.hull_integrity = new_integrity
-	if difference >= 5:
+	if difference >= 10:
+		if !$HeavyDamageSound.playing:
+			$HeavyDamageSound.pitch_scale = 0.7 + randf()/3.0
+			$HeavyDamageSound.play()
 		emit_signal("heavy_damage", difference)
 	if self.hull_integrity <= 0:
 		self.hull_integrity = 0

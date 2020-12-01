@@ -1,4 +1,4 @@
-[gd_scene load_steps=70 format=2]
+[gd_scene load_steps=71 format=2]
 
 [ext_resource path="res://characters/sub/Sub.gd" type="Script" id=1]
 [ext_resource path="res://characters/sub/sprite/0003.png" type="Texture" id=2]
@@ -46,6 +46,7 @@
 [ext_resource path="res://characters/sub/sfx/lights_turn_on.wav" type="AudioStream" id=44]
 [ext_resource path="res://characters/sub/sfx/light_flicker.wav" type="AudioStream" id=45]
 [ext_resource path="res://characters/sub/sfx/light_on.wav" type="AudioStream" id=46]
+[ext_resource path="res://characters/sub/sfx/glass_break_02.wav" type="AudioStream" id=47]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.8
@@ -244,6 +245,12 @@ script = ExtResource( 1 )
 
 [node name="DamageSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 39 )
+volume_db = -2.0
+pitch_scale = 0.7
+bus = "Ship"
+
+[node name="HeavyDamageSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 47 )
 volume_db = -2.0
 pitch_scale = 0.7
 bus = "Ship"
