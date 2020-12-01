@@ -1,15 +1,14 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://levels/prefabs/prefab.gd" type="Script" id=1]
-[ext_resource path="res://Objects/Obstacle/obstacle_01.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Objects/Obstacle/BigBoulder_02.tscn" type="PackedScene" id=2]
 
-[node name="surface_prefab_05" type="Node2D"]
+[node name="surface_prefab_06" type="Node2D"]
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_horizontal_guides_": [ 640.0, 0.0 ],
 "_edit_vertical_guides_": [ 640.0, 0.0 ]
 }
-cost = 5
 
 [node name="VisibilityEnabler2D" type="VisibilityEnabler2D" parent="."]
 rect = Rect2( 0, 0, 640, 640 )
@@ -69,13 +68,14 @@ collision_mask = 2
 [node name="Objects" type="Node2D" parent="."]
 
 [node name="Obstacle3" parent="Objects" instance=ExtResource( 2 )]
-position = Vector2( 32, 288 )
+position = Vector2( 32, 160 )
+damage = 32
 
 [node name="Obstacle5" parent="Objects" instance=ExtResource( 2 )]
-position = Vector2( 96, 544 )
+position = Vector2( 32, 576 )
 
 [node name="Obstacle4" parent="Objects" instance=ExtResource( 2 )]
-position = Vector2( -32, 384 )
+position = Vector2( 0, 352 )
 
 [node name="Obstacle6" parent="Objects" instance=ExtResource( 2 )]
 position = Vector2( 672, 288 )

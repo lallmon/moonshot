@@ -3,7 +3,7 @@ extends Area2D
 export var oxygen_value: int
 
 func _ready():
-	oxygen_value = 15
+	pass
 	
 func _on_oxygen_body_entered(body: Node) -> void:
 	if body.is_in_group("player"):

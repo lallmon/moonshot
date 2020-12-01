@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Power_recharge.wav-09e5f4291a1e9207ae3c6569d3c6c748.sample"
+
+[deps]
+
+source_file="res://characters/sub/sfx/Power_recharge.wav"
+dest_files=[ "res://.import/Power_recharge.wav-09e5f4291a1e9207ae3c6569d3c6c748.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

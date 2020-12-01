@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://ui/Meter/under_bar.png" type="Texture" id=1]
+[ext_resource path="res://ui/Meter/over_bar.png" type="Texture" id=3]
+[ext_resource path="res://ui/Meter/power_progress_bar.png" type="Texture" id=4]
+
+[node name="PowerMeter" type="HBoxContainer"]
+margin_right = 416.0
+margin_bottom = 64.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Progress" type="TextureProgress" parent="."]
+margin_left = 48.0
+margin_right = 368.0
+margin_bottom = 65.0
+size_flags_vertical = 0
+value = 100.0
+texture_under = ExtResource( 1 )
+texture_over = ExtResource( 3 )
+texture_progress = ExtResource( 4 )

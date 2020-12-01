@@ -1,0 +1,88 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://levels/prefabs/prefab.gd" type="Script" id=1]
+[ext_resource path="res://Objects/Obstacle/TallBoulder.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Objects/Obstacle/SmallBoulder.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Objects/Obstacle/SmallBoulder_02.tscn" type="PackedScene" id=4]
+
+[node name="surface_prefab_07" type="Node2D"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_horizontal_guides_": [ 640.0, 0.0 ],
+"_edit_vertical_guides_": [ 640.0, 0.0 ]
+}
+cost = 16
+
+[node name="VisibilityEnabler2D" type="VisibilityEnabler2D" parent="."]
+rect = Rect2( 0, 0, 640, 640 )
+
+[node name="ObjectSpawns" type="Node2D" parent="."]
+
+[node name="Position2D3" type="RayCast2D" parent="ObjectSpawns"]
+position = Vector2( 96, 64 )
+enabled = true
+exclude_parent = false
+cast_to = Vector2( 0, 32 )
+collision_mask = 2
+
+[node name="Position2D2" type="RayCast2D" parent="ObjectSpawns"]
+position = Vector2( 224, 0 )
+enabled = true
+exclude_parent = false
+cast_to = Vector2( 0, 32 )
+collision_mask = 2
+
+[node name="Position2D" type="RayCast2D" parent="ObjectSpawns"]
+position = Vector2( 448, 192 )
+enabled = true
+exclude_parent = false
+cast_to = Vector2( -32, 0 )
+collision_mask = 2
+
+[node name="Position2D4" type="RayCast2D" parent="ObjectSpawns"]
+position = Vector2( 256, 448 )
+enabled = true
+exclude_parent = false
+cast_to = Vector2( -32, 0 )
+collision_mask = 2
+
+[node name="Position2D5" type="RayCast2D" parent="ObjectSpawns"]
+position = Vector2( 256, 544 )
+enabled = true
+exclude_parent = false
+cast_to = Vector2( -32, 0 )
+collision_mask = 2
+
+[node name="Position2D6" type="RayCast2D" parent="ObjectSpawns"]
+position = Vector2( 416, 448 )
+enabled = true
+exclude_parent = false
+cast_to = Vector2( 32, 0 )
+collision_mask = 2
+
+[node name="Position2D7" type="RayCast2D" parent="ObjectSpawns"]
+position = Vector2( 416, 544 )
+enabled = true
+exclude_parent = false
+cast_to = Vector2( 32, 0 )
+collision_mask = 2
+
+[node name="Objects" type="Node2D" parent="."]
+
+[node name="TallBoulder" parent="Objects" instance=ExtResource( 2 )]
+position = Vector2( 576, 576 )
+
+[node name="TallBoulder2" parent="Objects" instance=ExtResource( 2 )]
+position = Vector2( 32, 576 )
+rotation = 3.14159
+scale = Vector2( 1, -1 )
+
+[node name="SmallBoulder" parent="Objects" instance=ExtResource( 3 )]
+position = Vector2( 608, 32 )
+rotation = 3.14159
+scale = Vector2( 1, -1 )
+
+[node name="SmallBoulder2" parent="Objects" instance=ExtResource( 4 )]
+position = Vector2( 256, 224 )
+rotation = 3.14159
+scale = Vector2( 1, -1 )

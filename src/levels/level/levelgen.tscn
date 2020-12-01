@@ -1,0 +1,540 @@
+[gd_scene load_steps=46 format=2]
+
+[ext_resource path="res://cameras/Camera2D.gd" type="Script" id=1]
+[ext_resource path="res://Objects/SpawnSplash/SpawnSplash.tscn" type="PackedScene" id=2]
+[ext_resource path="res://FX/Lights/128x128_beam_blur.png" type="Texture" id=3]
+[ext_resource path="res://FX/Particles/bubble_32x32.png" type="Texture" id=4]
+[ext_resource path="res://FX/Particles/mote_32x32.png" type="Texture" id=5]
+[ext_resource path="res://Music/MusicSystem.tscn" type="PackedScene" id=6]
+[ext_resource path="res://icon.png" type="Texture" id=7]
+[ext_resource path="res://FX/Shaders/gradient.shader" type="Shader" id=8]
+[ext_resource path="res://FX/Lights/128x128.png" type="Texture" id=9]
+[ext_resource path="res://FX/Lights/caustic_ray.png" type="Texture" id=10]
+[ext_resource path="res://levels/level/levelgen.gd" type="Script" id=11]
+[ext_resource path="res://LOGO RENDER.png" type="Texture" id=12]
+[ext_resource path="res://characters/sub/Sub.tscn" type="PackedScene" id=13]
+[ext_resource path="res://levels/level/underwater_drone.wav" type="AudioStream" id=14]
+[ext_resource path="res://ui/fonts/DepthGuage.tres" type="DynamicFont" id=15]
+[ext_resource path="res://scripts/SplashBoard.gd" type="Script" id=16]
+[ext_resource path="res://Music/MusicSystem.gd" type="Script" id=17]
+[ext_resource path="res://FX/Shaders/water.tres" type="Shader" id=18]
+[ext_resource path="res://FX/Particles/fish_02.png" type="Texture" id=19]
+[ext_resource path="res://ui/fonts/instructions.tres" type="DynamicFont" id=20]
+[ext_resource path="res://FX/Particles/fish_02_reverse.png" type="Texture" id=21]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 8 )
+shader_param/color = Color( 0.439216, 0.439216, 0.439216, 1 )
+shader_param/screen_height = null
+shader_param/height = 922.197
+shader_param/position = 301.506
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 25, 640 )
+
+[sub_resource type="CanvasItemMaterial" id=3]
+blend_mode = 1
+
+[sub_resource type="Gradient" id=4]
+offsets = PoolRealArray( 0, 0.213058, 0.841924, 1 )
+colors = PoolColorArray( 0.576471, 0.745098, 0.913725, 0, 0.576471, 0.745098, 0.913725, 0.12549, 0.576471, 0.745098, 0.913725, 0.188235, 0.576471, 0.745098, 0.913725, 0 )
+
+[sub_resource type="GradientTexture" id=5]
+gradient = SubResource( 4 )
+
+[sub_resource type="ParticlesMaterial" id=6]
+emission_shape = 2
+emission_box_extents = Vector3( 1000, 1, 1 )
+flag_disable_z = true
+direction = Vector3( 0, 0, 0 )
+gravity = Vector3( 0, 0, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 25.0
+scale_random = 0.17
+color_ramp = SubResource( 5 )
+
+[sub_resource type="ParticlesMaterial" id=7]
+emission_shape = 2
+emission_box_extents = Vector3( 1500, 1, 1 )
+flag_disable_z = true
+direction = Vector3( 0, 0, 0 )
+gravity = Vector3( 0, 0, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 4.0
+scale_random = 0.17
+color_ramp = SubResource( 5 )
+hue_variation = -0.02
+hue_variation_random = 1.0
+
+[sub_resource type="Curve" id=8]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.758621, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.982759, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=9]
+curve = SubResource( 8 )
+
+[sub_resource type="ParticlesMaterial" id=10]
+emission_shape = 2
+emission_box_extents = Vector3( 1000, 25, 1 )
+flag_disable_z = true
+direction = Vector3( 0, 0, 0 )
+gravity = Vector3( 0, 1, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 0.03
+scale_random = 0.39
+scale_curve = SubResource( 9 )
+color_ramp = SubResource( 5 )
+
+[sub_resource type="CanvasItemMaterial" id=11]
+blend_mode = 1
+
+[sub_resource type="ParticlesMaterial" id=12]
+emission_shape = 2
+emission_box_extents = Vector3( 1000, 200, 1 )
+flag_disable_z = true
+gravity = Vector3( 0, -20, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 2.0
+scale_random = 1.0
+
+[sub_resource type="Gradient" id=13]
+offsets = PoolRealArray( 0, 0.172093, 0.818605, 0.992593 )
+colors = PoolColorArray( 0, 0.858824, 0.92549, 0, 0, 0.858824, 0.92549, 0.501961, 0, 0.858824, 0.92549, 0.505882, 0, 0.858824, 0.92549, 0 )
+
+[sub_resource type="GradientTexture" id=14]
+gradient = SubResource( 13 )
+
+[sub_resource type="ParticlesMaterial" id=15]
+emission_shape = 2
+emission_box_extents = Vector3( 1000, 1920, 1 )
+flag_disable_z = true
+direction = Vector3( 0, 0, 0 )
+gravity = Vector3( 0, 1, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 0.05
+scale_random = 0.39
+scale_curve = SubResource( 9 )
+color_ramp = SubResource( 14 )
+
+[sub_resource type="Gradient" id=16]
+offsets = PoolRealArray( 0.0136519, 0.0546075, 0.901024, 1 )
+colors = PoolColorArray( 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=17]
+gradient = SubResource( 16 )
+
+[sub_resource type="ParticlesMaterial" id=18]
+emission_shape = 2
+emission_box_extents = Vector3( 50, 1080, 1 )
+flag_disable_z = true
+direction = Vector3( 1, 0.1, 0 )
+spread = 0.0
+flatness = 1.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 250.0
+initial_velocity_random = 0.5
+orbit_velocity = 0.01
+orbit_velocity_random = 0.0
+radial_accel = 10.72
+angle = -5.3
+scale = 0.3
+scale_random = 0.2
+color_ramp = SubResource( 17 )
+hue_variation = 0.16
+hue_variation_random = 1.0
+
+[sub_resource type="ParticlesMaterial" id=19]
+emission_shape = 2
+emission_box_extents = Vector3( 50, 1080, 1 )
+flag_disable_z = true
+direction = Vector3( 1, 0.1, 0 )
+spread = 0.0
+flatness = 1.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 250.0
+initial_velocity_random = 0.5
+orbit_velocity = 0.01
+orbit_velocity_random = 0.0
+radial_accel = 10.72
+angle = 9.0
+scale = 0.3
+scale_random = 0.2
+color_ramp = SubResource( 17 )
+hue_variation = 0.16
+hue_variation_random = 1.0
+
+[sub_resource type="ShaderMaterial" id=20]
+shader = ExtResource( 18 )
+shader_param/offset = Vector2( 0, 0 )
+shader_param/sprite_scale = Vector2( 20, 20 )
+shader_param/wave_strength = 0.712
+shader_param/noise_amount = 0.035
+shader_param/blue_tint = Color( 0, 0.529412, 1, 1 )
+
+[sub_resource type="RectangleShape2D" id=21]
+extents = Vector2( 2988.05, 282.753 )
+
+[sub_resource type="Animation" id=22]
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 2.00392, 2.00392, 2.00392, 0 ) ]
+}
+
+[sub_resource type="Animation" id=23]
+length = 1.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 2.00392, 2.00392, 2.00392, 1 ) ]
+}
+
+[sub_resource type="Animation" id=24]
+length = 5.0
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 2.00392, 2.00392, 2.00392, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[node name="LevelGen" type="Node2D"]
+script = ExtResource( 11 )
+
+[node name="BG" type="Sprite" parent="."]
+visible = false
+material = SubResource( 1 )
+position = Vector2( 951.089, 9467.52 )
+scale = Vector2( 30.656, 300 )
+texture = ExtResource( 7 )
+
+[node name="Geometry" type="Node2D" parent="."]
+
+[node name="Items" type="Node2D" parent="."]
+
+[node name="Walls" type="Node2D" parent="."]
+position = Vector2( 0, 560.159 )
+
+[node name="leftwall" type="StaticBody2D" parent="Walls"]
+position = Vector2( 0, -539.246 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Walls/leftwall"]
+position = Vector2( -200, 540 )
+shape = SubResource( 2 )
+
+[node name="rightwall" type="StaticBody2D" parent="Walls"]
+position = Vector2( 0, -539.246 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/rightwall"]
+position = Vector2( 2070, 540 )
+shape = SubResource( 2 )
+
+[node name="Sub" parent="." instance=ExtResource( 13 )]
+position = Vector2( 958.501, -402.568 )
+linear_damp = 1.0
+angular_damp = 1.0
+
+[node name="SpawnSplash" parent="." instance=ExtResource( 2 )]
+position = Vector2( 959.822, -19.7758 )
+
+[node name="Caustic Light" type="Particles2D" parent="."]
+modulate = Color( 1, 1, 1, 0.501961 )
+material = SubResource( 3 )
+position = Vector2( 945.104, 297.059 )
+amount = 10
+lifetime = 5.0
+preprocess = 15.0
+visibility_rect = Rect2( -1000, -3000, 1920, 5000 )
+draw_order = 1
+process_material = SubResource( 6 )
+texture = ExtResource( 3 )
+
+[node name="God Rays" type="Particles2D" parent="."]
+material = SubResource( 3 )
+position = Vector2( 945.104, 3846.71 )
+scale = Vector2( 1.3, 4.5 )
+amount = 10
+lifetime = 5.0
+preprocess = 15.0
+visibility_rect = Rect2( -1000, -3000, 1920, 5000 )
+draw_order = 1
+process_material = SubResource( 7 )
+texture = ExtResource( 10 )
+
+[node name="God Rays_Front" type="Particles2D" parent="."]
+visible = false
+material = SubResource( 3 )
+position = Vector2( 945.104, 3834.72 )
+scale = Vector2( 1.3, 4.5 )
+z_index = 2
+amount = 10
+lifetime = 5.0
+preprocess = 15.0
+visibility_rect = Rect2( -1000, -3000, 1920, 5000 )
+draw_order = 1
+process_material = SubResource( 7 )
+texture = ExtResource( 10 )
+
+[node name="Particles drop" type="Particles2D" parent="."]
+material = SubResource( 3 )
+position = Vector2( 945.104, -176.441 )
+amount = 200
+lifetime = 50.0
+preprocess = 124.43
+visibility_rect = Rect2( -1000, -3000, 1920, 5000 )
+local_coords = false
+draw_order = 1
+process_material = SubResource( 10 )
+texture = ExtResource( 9 )
+
+[node name="Light2D" type="Light2D" parent="."]
+position = Vector2( 945.104, 2.90259 )
+texture = ExtResource( 9 )
+texture_scale = 50.0
+energy = 0.3
+shadow_enabled = true
+shadow_gradient_length = 1.3
+shadow_filter = 3
+shadow_filter_smooth = 11.0
+
+[node name="Camera2D" type="Camera2D" parent="."]
+pause_mode = 2
+position = Vector2( 966.052, 88.4829 )
+z_index = 1
+current = true
+process_mode = 0
+limit_left = 0
+limit_top = 0
+limit_right = 1920
+limit_bottom = 192000
+limit_smoothed = true
+smoothing_enabled = true
+smoothing_speed = 10.0
+editor_draw_screen = false
+editor_draw_limits = true
+script = ExtResource( 1 )
+player = NodePath("../Sub")
+
+[node name="Bubbles" type="Particles2D" parent="Camera2D"]
+material = SubResource( 11 )
+position = Vector2( 17.9592, 757.694 )
+amount = 100
+lifetime = 100.0
+visibility_rect = Rect2( -1000, -2000, 1920, 9000 )
+local_coords = false
+draw_order = 1
+process_material = SubResource( 12 )
+texture = ExtResource( 4 )
+
+[node name="Floaties" type="Particles2D" parent="Camera2D"]
+material = SubResource( 3 )
+position = Vector2( 0, -322.424 )
+amount = 500
+lifetime = 25.0
+preprocess = 124.43
+visibility_rect = Rect2( -1000, -3000, 1920, 5000 )
+local_coords = false
+draw_order = 1
+process_material = SubResource( 15 )
+texture = ExtResource( 5 )
+
+[node name="Fish" type="Particles2D" parent="Camera2D"]
+position = Vector2( -1384.26, 207.622 )
+amount = 5
+lifetime = 15.0
+explosiveness = 0.23
+visibility_rect = Rect2( -200, -540, 3840, 2160 )
+local_coords = false
+process_material = SubResource( 18 )
+texture = ExtResource( 19 )
+
+[node name="Fish2" type="Particles2D" parent="Camera2D"]
+position = Vector2( 1593.71, 207.622 )
+scale = Vector2( -1, 1 )
+amount = 5
+lifetime = 15.0
+explosiveness = 0.23
+visibility_rect = Rect2( -200, -540, 3840, 2160 )
+local_coords = false
+process_material = SubResource( 19 )
+texture = ExtResource( 21 )
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+visible = false
+light_mask = 3
+color = Color( 0, 0, 0, 1 )
+
+[node name="ripple" type="Sprite" parent="."]
+material = SubResource( 20 )
+position = Vector2( 935.59, 1016.23 )
+scale = Vector2( 80, 80 )
+z_index = 1
+texture = ExtResource( 7 )
+
+[node name="Ambience" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 14 )
+autoplay = true
+bus = "Ambient"
+
+[node name="MusicSystem" parent="." instance=ExtResource( 6 )]
+script = ExtResource( 17 )
+
+[node name="SplashBoard" type="Control" parent="."]
+modulate = Color( 1.50196, 1.50196, 1.50196, 1 )
+light_mask = -2147483648
+margin_top = 254.559
+margin_right = 1920.0
+margin_bottom = 1334.56
+script = ExtResource( 16 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Logo" type="Sprite" parent="SplashBoard"]
+position = Vector2( 930.135, 104.962 )
+texture = ExtResource( 12 )
+
+[node name="Longest" type="VBoxContainer" parent="SplashBoard"]
+modulate = Color( 1, 1, 1, 0.784314 )
+light_mask = 0
+margin_left = 1009.02
+margin_top = 266.277
+margin_right = 1402.02
+margin_bottom = 424.277
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LongestText" type="Label" parent="SplashBoard/Longest"]
+light_mask = 0
+margin_right = 393.0
+margin_bottom = 77.0
+custom_fonts/font = ExtResource( 15 )
+text = "LONGEST"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LongestValue" type="Label" parent="SplashBoard/Longest"]
+light_mask = 0
+margin_top = 81.0
+margin_right = 393.0
+margin_bottom = 158.0
+custom_fonts/font = ExtResource( 15 )
+text = "5m"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Deepest" type="VBoxContainer" parent="SplashBoard"]
+modulate = Color( 1, 1, 1, 0.784314 )
+light_mask = 0
+margin_left = 512.455
+margin_top = 266.277
+margin_right = 905.455
+margin_bottom = 424.277
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DeepestText" type="Label" parent="SplashBoard/Deepest"]
+light_mask = 0
+margin_right = 393.0
+margin_bottom = 77.0
+custom_fonts/font = ExtResource( 15 )
+text = "DEEPEST"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DeepestValue" type="Label" parent="SplashBoard/Deepest"]
+light_mask = 0
+margin_top = 81.0
+margin_right = 393.0
+margin_bottom = 158.0
+custom_fonts/font = ExtResource( 15 )
+text = "1920m"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InstructionsLeft" type="Label" parent="SplashBoard"]
+light_mask = 0
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 222.236
+margin_top = -45.6454
+margin_right = 856.236
+margin_bottom = 271.354
+custom_fonts/font = ExtResource( 20 )
+text = "MOVEMENT
+LEFT CLICK: BOOST
+RIGHT CLICK: REVERSE"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InstructionsRight" type="Label" parent="SplashBoard"]
+light_mask = 0
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -854.594
+margin_top = -49.8833
+margin_right = -101.594
+margin_bottom = 267.117
+custom_fonts/font = ExtResource( 20 )
+text = "ABILITIES
+MIDDLE CLICK: LIGHTS
+CLICK ON SUB: REPAIR"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SplashBoardFade" type="Area2D" parent="SplashBoard"]
+position = Vector2( 1059.21, 534.365 )
+scale = Vector2( 0.5, 0.5 )
+collision_layer = 2
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SplashBoard/SplashBoardFade"]
+position = Vector2( -124.571, 857.982 )
+shape = SubResource( 21 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="SplashBoard"]
+autoplay = "_SETUP"
+anims/_SETUP = SubResource( 22 )
+anims/fade_in = SubResource( 23 )
+anims/fade_out = SubResource( 24 )
+[connection signal="body_entered" from="SplashBoard/SplashBoardFade" to="SplashBoard" method="_on_SplashBoardFade_body_entered"]

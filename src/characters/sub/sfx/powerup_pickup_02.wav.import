@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/powerup_pickup_02.wav-3a93b485e1ae27888a35f2f35f969af8.sample"
+
+[deps]
+
+source_file="res://characters/sub/sfx/powerup_pickup_02.wav"
+dest_files=[ "res://.import/powerup_pickup_02.wav-3a93b485e1ae27888a35f2f35f969af8.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

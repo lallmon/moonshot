@@ -6,6 +6,7 @@ export var damage = 5
 var force:Vector2
 
 func _ready() -> void:
+	add_to_group("obstacle")
 	$InfluenceArea/CollisionShape2D.disabled = true
 	$AnimationPlayer.play("cycle")
 

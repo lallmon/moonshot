@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/deep_dark_bass_loop_keys.ogg-30f1e27731b3b09f76ad1a322492fc36.oggstr"
+
+[deps]
+
+source_file="res://Music/BGM/deep_dark_bass_loop_keys.ogg"
+dest_files=[ "res://.import/deep_dark_bass_loop_keys.ogg-30f1e27731b3b09f76ad1a322492fc36.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

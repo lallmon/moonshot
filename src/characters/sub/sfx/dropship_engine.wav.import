@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/dropship_engine.wav-b9bf0c6465dd56c213d310c176c7f16c.sample"
+
+[deps]
+
+source_file="res://characters/sub/sfx/dropship_engine.wav"
+dest_files=[ "res://.import/dropship_engine.wav-b9bf0c6465dd56c213d310c176c7f16c.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=true
+compress/mode=0

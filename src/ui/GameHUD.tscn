@@ -1,18 +1,61 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://ui/fonts/DepthGuage.tres" type="DynamicFont" id=1]
 [ext_resource path="res://ui/GameHUD.gd" type="Script" id=2]
 [ext_resource path="res://ui/DebugOverlay.tscn" type="PackedScene" id=3]
-[ext_resource path="res://ui/Meter/Meter.tscn" type="PackedScene" id=4]
+[ext_resource path="res://ui/Meter/PowerMeter.tscn" type="PackedScene" id=4]
 [ext_resource path="res://ui/Damage_overlay.png" type="Texture" id=5]
+[ext_resource path="res://characters/sub/sfx/Power_recharge.wav" type="AudioStream" id=6]
+[ext_resource path="res://ui/Meter/HullMeter.tscn" type="PackedScene" id=7]
+[ext_resource path="res://ui/Meter/OxygenMeter.tscn" type="PackedScene" id=8]
 
-[sub_resource type="CanvasItemMaterial" id=1]
-blend_mode = 1
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
 
-[sub_resource type="Animation" id=2]
-resource_name = "_default"
+uniform float wave_strength : hint_range(0,1);
+
+float rand(vec2 coord)
+{
+    return fract(sin(dot(coord.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
+float noise(vec2 coord){
+	vec2 i = floor(coord);
+	vec2 f = fract(coord);
+	
+	//4 corners of a rectangle surrounding our point
+	float a = rand(i);
+	float b = rand(i + vec2(1.0, 0.0));
+	float c = rand(i + vec2(0.0, 1.0));
+	float d = rand(i + vec2(1.0, 1.0));
+	
+	vec2 cubic = f * f * (3.0 - 2.0 * f);
+	
+	return mix(a,b,cubic.x) + (c-a) * cubic.y * (1.0 - cubic.x) + (d-b) * cubic.x * cubic.y;
+}
+
+void fragment(){
+	vec2 noisecoord1 = UV  * vec2(1920,1080) * 3.0;
+	vec2 noisecoord2 = UV * vec2(1920,1080) * 3.0 + 4.0;
+	
+	vec2 motion1 = vec2(TIME * 0.3, TIME * -0.4);
+	vec2 motion2 = vec2(TIME * 0.1, TIME * 0.5);
+	
+	vec2 distort1 = vec2(noise(noisecoord1 + motion1), noise(noisecoord2 + motion1)) - vec2(0.5);
+	vec2 distort2 = vec2(noise(noisecoord1 + motion2), noise(noisecoord2 + motion2)) - vec2(0.5);
+	
+	vec2 distort_sum = (distort1 + distort2) / (2048.0*(1.0-wave_strength));
+	
+	vec4 color = textureLod(SCREEN_TEXTURE, SCREEN_UV + distort_sum, 0);
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/wave_strength = 0.151
+
+[sub_resource type="Animation" id=3]
 tracks/0/type = "value"
-tracks/0/path = NodePath("DamageOverlay:visible")
+tracks/0/path = NodePath(".:visible")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -24,7 +67,7 @@ tracks/0/keys = {
 "values": [ false ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("DamageOverlay:modulate")
+tracks/1/path = NodePath(".:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -36,36 +79,183 @@ tracks/1/keys = {
 "values": [ Color( 1, 1, 1, 0 ) ]
 }
 
-[sub_resource type="Animation" id=3]
-length = 3.0
+[sub_resource type="Animation" id=4]
+length = 2.5
 tracks/0/type = "value"
-tracks/0/path = NodePath("DamageOverlay:visible")
+tracks/0/path = NodePath(".:visible")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 3 ),
+"times": PoolRealArray( 0, 2.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ true, false ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("DamageOverlay:modulate")
+tracks/1/path = NodePath(".:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.1, 1, 3 ),
+"times": PoolRealArray( 0, 0.1, 1, 2.5 ),
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0.686275 ), Color( 1, 1, 1, 0.686275 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "_SETUP"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Power:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Oxygen:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Hull:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("DepthGuage:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "fade_out"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+length = 4.0
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("DepthGuage:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.6, 2.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Hull:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2, 0.25, 0.45, 0.55, 0.85, 0.95 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Oxygen:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.4, 0.45, 0.7, 0.8, 1.1, 1.15 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Power:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.1, 0.3, 0.35, 0.8, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath(".:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/5/type = "audio"
+tracks/5/path = NodePath("PowerUpSound")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 6 )
+} ],
+"times": PoolRealArray( 0 )
 }
 
 [node name="GameHUD" type="Control"]
+material = SubResource( 2 )
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 1
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_lock_": true,
@@ -73,20 +263,24 @@ __meta__ = {
 }
 
 [node name="DepthGuage" type="HBoxContainer" parent="."]
+modulate = Color( 1, 1, 1, 0 )
 anchor_left = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-margin_left = -184.0
-margin_top = 64.0
-margin_right = 184.0
-margin_bottom = 79.0
+anchor_bottom = 1.0
+margin_left = -75.0
+margin_top = -128.947
+margin_right = 75.0
+margin_bottom = -49.9468
 size_flags_vertical = 0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Title" type="Label" parent="DepthGuage"]
-margin_right = 249.0
-margin_bottom = 79.0
+visible = false
+margin_right = 200.0
+margin_bottom = 77.0
 size_flags_horizontal = 2
 size_flags_vertical = 2
 custom_fonts/font = ExtResource( 1 )
@@ -94,30 +288,28 @@ custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Depth: "
 valign = 1
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
 [node name="Value" type="Label" parent="DepthGuage"]
-margin_left = 253.0
-margin_right = 295.0
-margin_bottom = 79.0
+margin_right = 36.0
+margin_bottom = 77.0
 grow_horizontal = 2
 size_flags_horizontal = 2
 size_flags_vertical = 2
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "0"
+align = 2
 valign = 1
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
 [node name="DepthMeasurement" type="Label" parent="DepthGuage"]
-margin_left = 299.0
-margin_right = 368.0
-margin_bottom = 79.0
+margin_left = 77.0
+margin_right = 126.0
+margin_bottom = 77.0
 size_flags_horizontal = 2
 size_flags_vertical = 2
 custom_fonts/font = ExtResource( 1 )
@@ -126,15 +318,15 @@ text = "m"
 align = 2
 valign = 1
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
 [node name="Hull" type="VBoxContainer" parent="."]
-margin_left = 32.0
-margin_top = 32.0
-margin_right = 352.0
-margin_bottom = 179.0
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 200.0
+margin_top = 48.0
+margin_right = 520.0
+margin_bottom = 263.0
 grow_horizontal = 2
 grow_vertical = 0
 size_flags_vertical = 0
@@ -144,16 +336,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Meter" parent="Hull" instance=ExtResource( 4 )]
+[node name="HullMeter" parent="Hull" instance=ExtResource( 7 )]
 margin_right = 320.0
+margin_bottom = 65.0
 
 [node name="Title" type="Label" parent="Hull"]
-margin_top = 68.0
+margin_top = 69.0
 margin_right = 320.0
-margin_bottom = 147.0
+margin_bottom = 146.0
 size_flags_vertical = 2
 custom_fonts/font = ExtResource( 1 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color = Color( 0.921569, 0.784314, 0.784314, 0.784314 )
 text = "Hull"
 align = 1
 valign = 1
@@ -161,29 +354,63 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Oxygen" type="VBoxContainer" parent="."]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -352.0
-margin_top = 32.0
-margin_right = -32.0
-margin_bottom = 179.0
+[node name="Power" type="VBoxContainer" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -160.0
+margin_top = 48.0
+margin_right = 160.0
+margin_bottom = 194.0
 size_flags_vertical = 0
 __meta__ = {
 "_edit_group_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="Meter" parent="Oxygen" instance=ExtResource( 4 )]
+[node name="PowerMeter" parent="Power" instance=ExtResource( 4 )]
 margin_right = 320.0
+margin_bottom = 65.0
 
-[node name="Title" type="Label" parent="Oxygen"]
-margin_top = 68.0
+[node name="Title" type="Label" parent="Power"]
+margin_top = 69.0
 margin_right = 320.0
-margin_bottom = 147.0
+margin_bottom = 146.0
 size_flags_vertical = 2
 custom_fonts/font = ExtResource( 1 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color = Color( 0.921569, 0.919424, 0.784314, 0.784314 )
+text = "Power"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Oxygen" type="VBoxContainer" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -520.0
+margin_top = 48.0
+margin_right = -200.0
+margin_bottom = 195.0
+size_flags_vertical = 0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="OxygenMeter" parent="Oxygen" instance=ExtResource( 8 )]
+margin_right = 320.0
+margin_bottom = 65.0
+
+[node name="Title" type="Label" parent="Oxygen"]
+margin_top = 69.0
+margin_right = 320.0
+margin_bottom = 146.0
+size_flags_vertical = 2
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.784314, 0.921569, 0.921569, 0.784314 )
 text = "Oxygen"
 align = 1
 valign = 1
@@ -192,6 +419,7 @@ __meta__ = {
 }
 
 [node name="Zone" type="Label" parent="."]
+visible = false
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -220,17 +448,28 @@ margin_right = 467.0
 margin_bottom = -19.0
 
 [node name="DamageOverlay" type="TextureRect" parent="."]
-visible = false
-modulate = Color( 1, 1, 1, 0 )
-material = SubResource( 1 )
-margin_right = 40.0
-margin_bottom = 40.0
+modulate = Color( 1, 1, 1, 0.171569 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
 texture = ExtResource( 5 )
+expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="DamageOverlay"]
 autoplay = "_default"
-anims/_default = SubResource( 2 )
-anims/take_damage = SubResource( 3 )
+anims/_default = SubResource( 3 )
+anims/take_damage = SubResource( 4 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "_SETUP"
+anims/_SETUP = SubResource( 5 )
+anims/fade_out = SubResource( 6 )
+anims/flicker_in = SubResource( 7 )
+
+[node name="PowerUpSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+volume_db = -6.0
+bus = "Ambient"

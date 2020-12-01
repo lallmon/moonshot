@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/deep_space_pad_loop.ogg-01732f8b8230b99401340f1579985aa2.oggstr"
+
+[deps]
+
+source_file="res://Music/BGM/deep_space_pad_loop.ogg"
+dest_files=[ "res://.import/deep_space_pad_loop.ogg-01732f8b8230b99401340f1579985aa2.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

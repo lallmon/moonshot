@@ -1,12 +1,13 @@
-[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+[gd_resource type="Shader" format=2]
 
-[sub_resource type="Shader" id=1]
+[resource]
 code = "shader_type canvas_item;
 
-uniform vec4 blue_tint : hint_color;
+uniform vec2 offset;
 uniform vec2 sprite_scale;
 uniform float wave_strength : hint_range(0,1);
 uniform float noise_amount : hint_range(0,1);
+uniform vec4 blue_tint : hint_color;
 
 float rand(vec2 coord)
 {
@@ -33,15 +34,15 @@ void fragment(){
 	vec2 noisecoord1 = UV  * sprite_scale * 3.0;
 	vec2 noisecoord2 = UV * sprite_scale * 3.0 + 4.0;
 	
-	vec2 motion1 = vec2(TIME * 0.3, TIME * -0.4);
-	vec2 motion2 = vec2(TIME * 0.1, TIME * 0.5);
+	vec2 motion1 = vec2(TIME * 0.3, TIME * -0.4) + offset;
+	vec2 motion2 = vec2(TIME * 0.1, TIME * 0.5) + offset;
 	
 	vec2 distort1 = vec2(noise(noisecoord1 + motion1), noise(noisecoord2 + motion1)) - vec2(0.5);
 	vec2 distort2 = vec2(noise(noisecoord1 + motion2), noise(noisecoord2 + motion2)) - vec2(0.5);
 	
 	vec2 distort_sum = (distort1 + distort2) / (2048.0*(1.0-wave_strength));
 	
-	vec4 color = textureLod(SCREEN_TEXTURE, SCREEN_UV + distort_sum, 0.0);
+	vec4 color = textureLod(SCREEN_TEXTURE, SCREEN_UV + distort_sum, 0);
 	
 	color = mix (color, blue_tint, 0.3);
 	color.rgb = mix(vec3(0.5),color.rgb, 1.4);
@@ -51,10 +52,3 @@ void fragment(){
 	
 	COLOR = color + vec4(noise*noise_amount, noise*noise_amount, noise*noise_amount,1);
 }"
-
-[resource]
-shader = SubResource( 1 )
-shader_param/blue_tint = Color( 0, 0.368627, 1, 1 )
-shader_param/sprite_scale = Vector2( 40, 80 )
-shader_param/wave_strength = 0.712
-shader_param/noise_amount = 0.061
