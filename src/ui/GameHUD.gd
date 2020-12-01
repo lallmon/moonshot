@@ -1,5 +1,11 @@
 extends Control
 
+func reset_values():
+	$DepthGuage/Value.text = "0"
+	$Hull/HullMeter/Progress.value = 100.0
+	$Power/PowerMeter/Progress.value = 100.0
+	$Oxygen/OxygenMeter/Progress.value = 100.0
+	
 func _on_Sub_depth_status(depth : float):
 	depth = Utilities.pixels_to_meters(depth)
 	
@@ -19,17 +25,23 @@ func _on_Sub_depth_status(depth : float):
 	else:
 		$Zone.text = ""
 
+func _on_activated():
+	reset_values()
+#	$AnimationPlayer.play("flicker_in")
+
+func _on_sub_destroyed():
+	$AnimationPlayer.play("fade_out")
+
 func _on_Sub_hull_status(integrity: int):
-	$Hull/Meter/Progress.value = integrity
-	
+	$Hull/HullMeter/Progress.value = integrity
 
 func _on_heavy_damage(damage: int):
 	#TO DO: dynamically change the effect based on how much damage has been taken
-	if not $AnimationPlayer.is_playing():
-		$AnimationPlayer.play("take_damage")
+	if not $DamageOverlay/AnimationPlayer.is_playing():
+		$DamageOverlay/AnimationPlayer.play("take_damage")
 
 func _on_Sub_oxygen_status(oxygen:float):
-	$Oxygen/Meter/Progress.value = oxygen
+	$Oxygen/OxygenMeter/Progress.value = oxygen
 
 func _on_Sub_power_status(power: float):
-	$Power/Meter/Progress.value = power
+	$Power/PowerMeter/Progress.value = power
