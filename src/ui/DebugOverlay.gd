@@ -8,8 +8,9 @@ func _ready():
 	display.height = ProjectSettings.get_setting("display/window/size/height")
 
 func _input(_ev):
-	if Input.is_key_pressed(KEY_F12):
-		$".".visible = !$".".visible
+	if game.debug == true:
+		if Input.is_key_pressed(KEY_F12):
+			$".".visible = !$".".visible
 
 func _process(_delta):
 	$FPS.text = ("FPS: %s" % Engine.get_frames_per_second())
