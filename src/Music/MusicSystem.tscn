@@ -8,7 +8,6 @@
 [ext_resource path="res://Music/BGM/deep_space_pad_loop_keys.ogg" type="AudioStream" id=6]
 [ext_resource path="res://Music/BGM/deep_space_pad_loop.ogg" type="AudioStream" id=7]
 
-
 [sub_resource type="Animation" id=1]
 resource_name = "_SETUP"
 tracks/0/type = "value"
@@ -49,7 +48,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 3, 3.001 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ 0.0, -80.0, -80.0 ]
+"values": [ 0.0, -80.0, -60.0 ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("Track02:volume_db")
@@ -58,10 +57,10 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 1.5 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0, 0.4, 1.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ -80.0, 0.0 ]
+"values": [ -60.0, -30.0, 0.0 ]
 }
 tracks/2/type = "method"
 tracks/2/path = NodePath("Track02")
@@ -105,7 +104,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ 0.0, -80.0 ]
+"values": [ 0.0, -60.0 ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("Track01:volume_db")
@@ -114,10 +113,10 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 1.5 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0, 0.4, 1.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ -80.0, 0.0 ]
+"values": [ -60.0, -30.0, 0.0 ]
 }
 tracks/2/type = "method"
 tracks/2/path = NodePath("Track01")
@@ -243,7 +242,7 @@ script = ExtResource( 1 )
 streams = [ ExtResource( 5 ), ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 7 ), ExtResource( 6 ) ]
 
 [node name="Track01" type="AudioStreamPlayer" parent="."]
-volume_db = 1.0
+volume_db = -80.0
 bus = "BGM"
 
 [node name="Track02" type="AudioStreamPlayer" parent="."]
