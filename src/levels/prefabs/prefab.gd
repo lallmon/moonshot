@@ -2,22 +2,37 @@ extends Node2D
 
 export var cost: = 10
 export var randomize_transform = true
+var spawned = false
 
-var debug = true
+var debug = false
+
 
 func _ready() -> void:
 	pass
 
+func _process(delta: float) -> void:
+	if game.player!= null:
+		if position.distance_to(game.player.position) >= 1920*2:
+			print ("deleting")
+			queue_free()
+
 #initialize the prefab object
-func initialize(newpos: Vector2):
+func initialize(newpos: Vector2, depth):
 	
 	position = newpos
 	
 	if randomize_transform == true:
 		RandomizeTerrain()
+		
+	set_textures(depth)
 	
 
-		
+func set_textures(depth):
+	var children = $Objects.get_children()
+	if children.empty():
+		return
+	for a in children:
+		a.set_texture(depth)
 
 #randomize rotatation of objects for variation
 func RandomizeTerrain():
@@ -25,7 +40,8 @@ func RandomizeTerrain():
 	if children.empty():
 		return
 	for a in children:
-		a.rotation_degrees = randi()%360
+		if a.rotate == true:
+			a.rotation_degrees = randi()%360
 
 #function for adding an item to the prefab
 #takes an object reference and then uses the spawn ray casts in the
@@ -85,7 +101,8 @@ func AddItem(object):
 	
 	item.initialize(newposition, newrotation)
 	
-	print ("adding ", item.name, " at position", item.position)
+	if game.debug==true and self.debug==true:
+		print ("adding ", item.name, " at position", item.position)
 	
 
 	
