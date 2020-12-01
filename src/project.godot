@@ -15,8 +15,14 @@ _global_script_class_icons={
 
 [application]
 
-config/name="moonshot"
+config/name="Moondrop"
 run/main_scene="res://screens/main/main.tscn"
+boot_splash/image="res://ui/splash.png"
+boot_splash/fullsize=false
+boot_splash/use_filter=false
+config/icon="res://ui/water-bolt.png"
+config/macos_native_icon="res://ui/water-bolt.icns"
+config/windows_native_icon="res://ui/water_bolt_BLL_icon.ico"
 
 [autoload]
 
@@ -29,9 +35,10 @@ window/size/width=1920
 window/size/height=1080
 window/size/resizable=false
 window/size/always_on_top=true
-window/size/test_width=1080
-window/size/test_height=608
+window/size/test_width=1280
+window/size/test_height=720
 window/dpi/allow_hidpi=true
+mouse_cursor/custom_image="res://ui/cursor.png"
 window/stretch/mode="2d"
 window/stretch/aspect="keep_width"
 
@@ -62,6 +69,10 @@ reset_btn={
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777245,"unicode":0,"echo":false,"script":null)
  ]
 }
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
 
 [layer_names]
 
