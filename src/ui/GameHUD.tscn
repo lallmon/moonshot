@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://ui/fonts/DepthGuage.tres" type="DynamicFont" id=1]
 [ext_resource path="res://ui/GameHUD.gd" type="Script" id=2]
@@ -53,12 +53,9 @@ void fragment(){
 shader = SubResource( 1 )
 shader_param/wave_strength = 0.151
 
-[sub_resource type="CanvasItemMaterial" id=3]
-blend_mode = 1
-
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=3]
 tracks/0/type = "value"
-tracks/0/path = NodePath("DamageOverlay:visible")
+tracks/0/path = NodePath(".:visible")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -70,7 +67,7 @@ tracks/0/keys = {
 "values": [ false ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("DamageOverlay:modulate")
+tracks/1/path = NodePath(".:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -82,7 +79,7 @@ tracks/1/keys = {
 "values": [ Color( 1, 1, 1, 0 ) ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=4]
 length = 3.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("DamageOverlay:visible")
@@ -108,8 +105,32 @@ tracks/1/keys = {
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.1, 1, 3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.690196 ), Color( 1, 1, 1, 0 ) ]
+}
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=5]
 resource_name = "_SETUP"
 tracks/0/type = "value"
 tracks/0/path = NodePath("Power:modulate")
@@ -160,7 +181,7 @@ tracks/3/keys = {
 "values": [ Color( 1, 1, 1, 0 ) ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=6]
 resource_name = "fade_out"
 length = 2.0
 tracks/0/type = "value"
@@ -176,7 +197,7 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=7]
 length = 4.0
 step = 0.05
 tracks/0/type = "value"
@@ -266,6 +287,7 @@ __meta__ = {
 }
 
 [node name="DepthGuage" type="HBoxContainer" parent="."]
+modulate = Color( 1, 1, 1, 0 )
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -324,6 +346,7 @@ __meta__ = {
 }
 
 [node name="Hull" type="VBoxContainer" parent="."]
+modulate = Color( 1, 1, 1, 0 )
 margin_left = 200.0
 margin_top = 48.0
 margin_right = 520.0
@@ -356,6 +379,7 @@ __meta__ = {
 }
 
 [node name="Power" type="VBoxContainer" parent="."]
+modulate = Color( 1, 1, 1, 0 )
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -160.0
@@ -387,6 +411,7 @@ __meta__ = {
 }
 
 [node name="Oxygen" type="VBoxContainer" parent="."]
+modulate = Color( 1, 1, 1, 0 )
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -520.0
@@ -447,26 +472,25 @@ margin_right = 467.0
 margin_bottom = -19.0
 
 [node name="DamageOverlay" type="TextureRect" parent="."]
-modulate = Color( 1, 1, 1, 0 )
-material = SubResource( 3 )
-margin_right = 40.0
-margin_bottom = 40.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 mouse_filter = 2
 texture = ExtResource( 5 )
+expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="DamageOverlay"]
 autoplay = "_default"
-anims/_default = SubResource( 4 )
-anims/take_damage = SubResource( 5 )
+anims/_default = SubResource( 3 )
+anims/take_damage = SubResource( 4 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "_SETUP"
-anims/_SETUP = SubResource( 6 )
-anims/fade_out = SubResource( 7 )
-anims/flicker_in = SubResource( 8 )
+anims/_SETUP = SubResource( 5 )
+anims/fade_out = SubResource( 6 )
+anims/flicker_in = SubResource( 7 )
 
 [node name="PowerUpSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 6 )
