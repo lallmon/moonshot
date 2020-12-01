@@ -1,0 +1,58 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Objects/Obstacle/Obstacle.gd" type="Script" id=1]
+[ext_resource path="res://Objects/Obstacle/Rock_01.png" type="Texture" id=2]
+
+[sub_resource type="PhysicsMaterial" id=1]
+rough = true
+absorbent = true
+
+[sub_resource type="OccluderPolygon2D" id=2]
+polygon = PoolVector2Array( -160, 160, -160, 96, -128, 64, -128, 0, -120, -40, -80, -64, -8, -80, 56, -72, 96, -64, 128, 0, 168, 72, 128, 128, 96, 160, 32, 192, -64, 192 )
+
+[node name="BigBoulder_03" type="StaticBody2D"]
+z_index = 1
+collision_layer = 2
+collision_mask = 2147483651
+physics_material_override = SubResource( 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_horizontal_guides_": [ 640.0 ],
+"_edit_vertical_guides_": [ 0.0, 640.0 ]
+}
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+position = Vector2( -256, -288 )
+antialiased = true
+texture = ExtResource( 2 )
+polygon = PoolVector2Array( 352, 224, 384, 288, 424, 360, 384, 416, 352, 448, 288, 480, 192, 480, 96, 448, 96, 384, 128, 352, 128, 288, 136, 248, 176, 224, 248, 208 )
+uv = PoolVector2Array( 224, 128, 288, 224, 352, 224, 384, 288, 384, 320, 448, 352, 480, 416, 416, 448, 384, 416, 256, 352, 128, 352, 160, 256, 128, 64 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2( -288, -272 )
+polygon = PoolVector2Array( 168, 232, 208, 208, 280, 192, 384, 208, 416, 272, 456, 344, 416, 400, 384, 432, 320, 464, 224, 464, 128, 432, 128, 368, 160, 336, 160, 272 )
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource( 2 )
+
+[node name="DecorationLocations" type="Node2D" parent="."]
+
+[node name="Position2D" type="Position2D" parent="DecorationLocations"]
+position = Vector2( -64, -48 )
+
+[node name="Position2D2" type="Position2D" parent="DecorationLocations"]
+position = Vector2( 120, 16 )
+
+[node name="Position2D3" type="Position2D" parent="DecorationLocations"]
+position = Vector2( 72, -40 )
+
+[node name="Position2D5" type="Position2D" parent="DecorationLocations"]
+position = Vector2( -120, 72 )
+
+[node name="Position2D4" type="Position2D" parent="DecorationLocations"]
+position = Vector2( 144, 72 )
+
+[node name="Position2D6" type="Position2D" parent="DecorationLocations"]
+position = Vector2( -64, 176 )
+
+[node name="Decorations" type="Node2D" parent="."]
