@@ -22,6 +22,8 @@ var prefabs = [
 	preload("res://levels/prefabs/surface/surface_prefab_04.tscn"),
 	preload("res://levels/prefabs/surface/surface_prefab_05.tscn"),
 	preload("res://levels/prefabs/surface/surface_prefab_06.tscn"),
+	preload("res://levels/prefabs/surface/surface_prefab_07.tscn"),
+	preload("res://levels/prefabs/surface/surface_prefab_08.tscn"),
 ]
 
 #Item list
@@ -34,13 +36,13 @@ var items = [
 func _enter_tree() -> void:
 	game.player = $Sub
 	game.camera = $Camera2D
+	if game.main!=null:
+		game.main.in_game = true
 	
 func _ready():
 	randomize()
 	$CanvasModulate.visible = true
 	generate_level_row(game.player.position + Vector2(0, 1024), difficulty_modifier)
-#	generate(7,3)
-#	generate_items(100)
 
 func _process(_delta):
 	#if player distance to the last row is less than the spawn distance
@@ -52,28 +54,28 @@ func _process(_delta):
 
 func generate_level_row(var offset:Vector2, var diff_modifier:float):
 	
-	print ("generating row")
+#	print ("generating row")
 	var spawn_position = Vector2(0,offset.y) + Vector2(0,chunk_size*unit_size)
 	
 	last_position = spawn_position
 	
 	budget = budget + (int(offset.y)/unit_size) * diff_modifier + difficulty_start
 	
-	print ("generated budget:", budget)
+#	print ("generated budget:", budget)
 	
 	var chunk
 	for x in range(0,level_size.x):
 		var allowed_budget = randi()%budget
-		print ("#", x, ": allowed budget: ", allowed_budget)
+#		print ("#", x, ": allowed budget: ", allowed_budget)
 		var prefab = randi()%prefabs.size()
-		print ("prefab: ", prefab)
+#		print ("prefab: ", prefab)
 		chunk = prefabs[prefab].instance()
 		if allowed_budget <= chunk.cost:
-			print ("out of budget, setting to null")
+#			print ("out of budget, setting to null")
 			chunk = null
 		else:
-			("initializing prefab")
-			chunk.initialize(spawn_position + Vector2(x*chunk_size*unit_size,0))
+#			("initializing prefab")
+			chunk.initialize(spawn_position + Vector2(x*chunk_size*unit_size,0), Utilities.pixels_to_meters(offset.y))
 			$Geometry.add_child(chunk)
 			last_chunk = chunk
 			budget = budget - chunk.cost
@@ -105,21 +107,21 @@ func generate_items(frequency:int):
 #returns an object based on index
 #TO DO: Add enum for object list
 func pick_item(index:int):
-	var item
+	var item = null
 	if index>=0 and index<items.size():
 		item = items[index]
-	else:
-		item==null
 	return item
 
 func track_player():
+	$Walls/leftwall.position.y = game.player.position.y
+	$Walls/rightwall.position.y = game.player.position.y
 	$ripple.position.y = game.player.position.y
 	$ripple.material.set_shader_param("offset", Vector2(0, game.player.position.y / $ripple.scale.y))
 
 #controls the canvas modulation to darken the light as you descend
 func DepthModulate():
 	var depth = $Sub.position.y
-	var base_brightness = 0.7
+	var base_brightness = 0.8
 	var depth_scale = 0.00025
 	var depth_multiplier = 0.05
 	
@@ -130,4 +132,4 @@ func DepthModulate():
 	if depth_adjusted <= 0.15: depth_adjusted = 0.15
 	
 	#set the canvasmodulate to adjusted depth
-	$CanvasModulate.color = Color(depth_adjusted,depth_adjusted,depth_adjusted,0.8)
+	$CanvasModulate.color = Color(depth_adjusted,depth_adjusted,depth_adjusted,1)
